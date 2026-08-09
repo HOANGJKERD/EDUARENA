@@ -1,44 +1,34 @@
-import NextAuth from 'next-auth'
-import Credentials from 'next-auth/providers/credentials'
-import { PrismaAdapter } from '@auth/prisma-adapter'
-import { prisma } from './db'
-import { compare } from 'bcryptjs'
-import { z } from 'zod'
+import NextAuth from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { prisma } from "./db"
+import { compare } from "bcryptjs"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: 'jwt' },
+  session: { strategy: "jwt" },
   providers: [
-    Credentials({
-      name: 'credentials',
+    CredentialsProvider({
+      name: "credentials",
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        const parsed = z
-          .object({
-            email: z.string().email(),
-            password: z.string().min(6),
-          })
-          .safeParse(credentials)
-
-        if (!parsed.success) {
+        if (!credentials?.email || !credentials?.password) {
           return null
         }
 
-        const { email, password } = parsed.data
-
         const user = await prisma.user.findUnique({
-          where: { email },
-          include: { profile: true },
+          where: { email: credentials.email },
+          include: { profile: true }
         })
 
         if (!user || !user.password) {
           return null
         }
 
-        const isValid = await compare(password, user.password)
+        const isValid = await compare(credentials.password, user.password)
 
         if (!isValid) {
           return null
@@ -47,10 +37,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return {
           id: user.id,
           email: user.email,
-          name: user.name || user.profile?.username || user.email?.split('@')[0],
+          name: user.name || user.profile?.username || user.email.split('@')[0],
         }
-      },
-    }),
+      }
+    })
   ],
   callbacks: {
     async jwt({ token, user }) {
@@ -64,9 +54,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = token.id as string
       }
       return session
-    },
+    }
   },
   pages: {
-    signIn: '/login',
+    signIn: "/login",
   },
+  // Thêm debug để xem lỗi
+  debug: process.env.NODE_ENV === "development",
 })
