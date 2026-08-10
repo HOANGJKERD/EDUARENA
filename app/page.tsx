@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button'
 export default function Home() {
   return (
     <main className="min-h-screen relative overflow-hidden">
-      {/* Bong bóng nền */}
+      {/* Bong bóng nền - giữ nguyên */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="bubble w-64 h-64 top-10 left-10 bubble-float" />
         <div className="bubble w-96 h-96 bottom-20 right-10 bubble-float delay-1000" />
@@ -22,20 +22,16 @@ export default function Home() {
             🎮 <span className="text-gradient">EduArena</span>
           </div>
           <div className="flex gap-3">
-            <Link href="/login">
-              <Button variant="ghost" className="text-white/80 hover:text-white">
-                Đăng nhập
-              </Button>
-            </Link>
-            <Link href="/register">
+            {/* Đổi cả 2 nút thành link đến Dashboard */}
+            <Link href="/dashboard">
               <Button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600">
-                Đăng ký miễn phí
+                Vào học ngay 🚀
               </Button>
             </Link>
           </div>
         </nav>
 
-        {/* Hero */}
+        {/* Hero - giữ nguyên nhưng đổi nút */}
         <section className="py-16 md:py-24 text-center">
           <GlassmorphicCard className="max-w-4xl mx-auto p-8 md:p-12">
             <div className="text-6xl md:text-7xl mb-4">🚀</div>
@@ -47,21 +43,16 @@ export default function Home() {
               biến việc học thành cuộc phiêu lưu
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register">
+              <Link href="/dashboard">
                 <Button size="lg" className="text-lg px-8 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600">
                   Bắt đầu ngay 🚀
-                </Button>
-              </Link>
-              <Link href="/dashboard">
-                <Button size="lg" variant="outline" className="text-lg px-8 border-white/20 text-white hover:bg-white/10">
-                  Khám phá →
                 </Button>
               </Link>
             </div>
           </GlassmorphicCard>
         </section>
 
-        {/* Features */}
+        {/* Features - giữ nguyên */}
         <section className="py-12 grid md:grid-cols-3 gap-6">
           <GlassmorphicCard className="text-center p-8 hover:scale-105 transition-transform">
             <div className="text-5xl mb-4">🧪</div>
