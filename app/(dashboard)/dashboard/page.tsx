@@ -1,33 +1,16 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
 import { GlassmorphicCard } from '@/components/ui/GlassmorphicCard'
 import { Button } from '@/components/ui/Button'
 import { Avatar } from '@/components/ui/Avatar'
 import Link from 'next/link'
 
 export default function DashboardPage() {
-  const { data: session, status } = useSession()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/login')
-    }
-  }, [status, router])
-
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-white text-xl">Đang tải...</div>
-      </div>
-    )
-  }
-
-  if (!session?.user) {
-    return null
+  // Dùng user mặc định, không cần đăng nhập
+  const user = {
+    name: "Học viên EduArena",
+    email: "demo@eduarena.com",
+    image: null,
   }
 
   return (
@@ -43,51 +26,45 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-white">🏠 Dashboard</h1>
-          <div className="flex items-center gap-4">
-            <Link href="/profile">
-              <Avatar src={session.user.image} alt={session.user.name || 'User'} size="md" />
-            </Link>
-          </div>
+          <Link href="/">
+            <Button variant="outline" className="text-white/70 hover:text-white">
+              ← Về trang chủ
+            </Button>
+          </Link>
         </div>
 
         {/* Welcome */}
         <GlassmorphicCard className="p-8 mb-8">
           <div className="flex items-center gap-4">
-            <Avatar src={session.user.image} alt={session.user.name || 'User'} size="lg" />
+            <Avatar src={user.image} alt={user.name} size="lg" />
             <div>
               <h2 className="text-2xl font-bold text-white">
-                Chào mừng, {session.user.name || 'Học viên'}! 👋
+                Chào mừng, {user.name}! 👋
               </h2>
-              <p className="text-white/60">Hôm nay bạn sẽ học gì?</p>
+              <p className="text-white/60">Bạn đã sẵn sàng học hôm nay chưa?</p>
             </div>
           </div>
         </GlassmorphicCard>
 
         {/* Quick Actions */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Link href="/learn">
-            <GlassmorphicCard className="p-6 text-center hover:scale-105 transition-transform cursor-pointer">
-              <div className="text-4xl mb-2">📚</div>
-              <h3 className="text-white font-semibold">Học ngay</h3>
-              <p className="text-white/50 text-sm">Bắt đầu bài học mới</p>
-            </GlassmorphicCard>
-          </Link>
+          <GlassmorphicCard className="p-6 text-center hover:scale-105 transition-transform cursor-pointer">
+            <div className="text-4xl mb-2">📚</div>
+            <h3 className="text-white font-semibold">Học ngay</h3>
+            <p className="text-white/50 text-sm">Bắt đầu bài học mới</p>
+          </GlassmorphicCard>
 
-          <Link href="/lab">
-            <GlassmorphicCard className="p-6 text-center hover:scale-105 transition-transform cursor-pointer">
-              <div className="text-4xl mb-2">🧪</div>
-              <h3 className="text-white font-semibold">Phòng Lab</h3>
-              <p className="text-white/50 text-sm">Thí nghiệm tương tác</p>
-            </GlassmorphicCard>
-          </Link>
+          <GlassmorphicCard className="p-6 text-center hover:scale-105 transition-transform cursor-pointer">
+            <div className="text-4xl mb-2">🧪</div>
+            <h3 className="text-white font-semibold">Phòng Lab</h3>
+            <p className="text-white/50 text-sm">Thí nghiệm tương tác</p>
+          </GlassmorphicCard>
 
-          <Link href="/arena">
-            <GlassmorphicCard className="p-6 text-center hover:scale-105 transition-transform cursor-pointer">
-              <div className="text-4xl mb-2">⚔️</div>
-              <h3 className="text-white font-semibold">Đấu trường</h3>
-              <p className="text-white/50 text-sm">PvP cùng bạn bè</p>
-            </GlassmorphicCard>
-          </Link>
+          <GlassmorphicCard className="p-6 text-center hover:scale-105 transition-transform cursor-pointer">
+            <div className="text-4xl mb-2">⚔️</div>
+            <h3 className="text-white font-semibold">Đấu trường</h3>
+            <p className="text-white/50 text-sm">PvP cùng bạn bè</p>
+          </GlassmorphicCard>
         </div>
 
         {/* Coming Soon */}
