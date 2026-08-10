@@ -1,44 +1,54 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model User {
+model Subject {
   id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
+  name      String   @unique
+  slug      String   @unique
+  description String
+  icon      String
+  color     String
+  grade     Int      // 10, 11, 12
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  profile   Profile?
+  chapters  Chapter[]
 }
 
-model Profile {
-  id         String  @id @default(cuid())
-  userId     String  @unique
-  user       User    @relation(fields: [userId], references: [id])
-  username   String  @unique
-  avatar     String? @default("/avatar-default.png")
-  xp         Int     @default(0)
-  level      Int     @default(1)
-  streak     Int     @default(0)
-  lastActive DateTime @default(now())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model Chapter {
+  id        String   @id @default(cuid())
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  name      String
+  slug      String
+  order     Int
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lessons   Lesson[]
 }
 
-model Subject {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  slug        String   @unique
-  description String
-  icon        String
-  color       String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model Lesson {
+  id        String   @id @default(cuid())
+  chapterId String
+  chapter   Chapter  @relation(fields: [chapterId], references: [id])
+  name      String
+  slug      String
+  order     Int
+  content   String?  // Nội dung bài học
+  videoUrl  String?  // Link video (nếu có)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  activities Activity[]
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  lessonId  String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  type      String   // 'quiz', 'reading', 'simulation', 'puzzle'
+  title     String
+  config    Json     // Lưu cấu hình tùy theo loại
+  order     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
